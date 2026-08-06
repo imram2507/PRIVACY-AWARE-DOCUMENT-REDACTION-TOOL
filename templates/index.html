@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShieldRedact - Privacy-Aware Document Redaction Tool</title>
+  
+  <!-- SEO & Meta Tags -->
+  <meta name="description" content="AI-Powered Document Sanitization. Automatically extract text, detect sensitive Personally Identifiable Information (PII), and irreversibly redact confidential documents.">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Google Fonts: Inter & Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+  <!-- Sticky Top Navbar -->
+  <nav class="navbar app-navbar">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+      
+      <!-- Brand Logo -->
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+        <div class="brand-logo-icon">
+          <i class="bi bi-shield-lock-fill"></i>
+        </div>
+        <span class="brand-title">ShieldRedact</span>
+      </a>
+
+      <!-- Right Controls -->
+      <div class="d-flex align-items-center gap-3">
+        <!-- Dark Mode Toggle Button -->
+        <button class="btn btn-secondary-custom p-2 px-3 d-flex align-items-center gap-2" id="themeToggleBtn" aria-label="Toggle theme">
+          <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+          <span class="d-none d-sm-inline font-weight-600">Theme</span>
+        </button>
+
+        <!-- GitHub Button -->
+        <a href="https://github.com" target="_blank" class="btn btn-primary-custom py-2 px-3 text-white text-decoration-none">
+          <i class="bi bi-github"></i>
+          <span class="d-none d-sm-inline">GitHub</span>
+        </a>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- App Wrapper: Sidebar + Main Content -->
+  <div class="app-wrapper">
+
+    <!-- Modern Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="text-uppercase text-muted fw-bold fs-7 mb-2 px-2" style="letter-spacing: 0.08em; font-size: 0.75rem;">Navigation</div>
+      
+      <a href="#hero" class="sidebar-link active">
+        <i class="bi bi-house-door-fill"></i>
+        <span>Home</span>
+      </a>
+
+      <a href="#upload" class="sidebar-link">
+        <i class="bi bi-cloud-arrow-up-fill"></i>
+        <span>Upload & Process</span>
+      </a>
+
+      <a href="#resultsContainer" class="sidebar-link">
+        <i class="bi bi-card-checklist"></i>
+        <span>Results Dashboard</span>
+      </a>
+
+      <a href="#features" class="sidebar-link">
+        <i class="bi bi-stars"></i>
+        <span>Key Features</span>
+      </a>
+
+      <div class="mt-auto pt-4 border-top">
+        <div class="d-flex align-items-center gap-2 p-2 rounded-3 bg-body-tertiary">
+          <i class="bi bi-shield-check text-success fs-4"></i>
+          <div class="lh-sm" style="font-size: 0.78rem;">
+            <strong class="d-block text-body">100% Private</strong>
+            <span class="text-muted">Local & Irreversible</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+
+      <!-- Hero Section -->
+      <section class="hero-section" id="hero">
+        <div class="hero-badge">
+          <i class="bi bi-shield-shaded"></i>
+          <span>Enterprise Grade Document Sanitization</span>
+        </div>
+
+        <h1 class="hero-title">
+          Privacy-Aware <br>
+          <span class="hero-gradient-text">Document Redaction Tool</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Seamlessly extract text via OCR, detect sensitive Personally Identifiable Information (PII) like Aadhaar, PAN, Emails, and Phone Numbers, and permanently sanitize confidential PDF and Image files.
+        </p>
+
+        <!-- Supported Formats Pills -->
+        <div class="d-flex flex-wrap align-items-center justify-content-center gap-2">
+          <span class="file-type-pill"><i class="bi bi-file-earmark-pdf text-danger me-1"></i> PDF Documents</span>
+          <span class="file-type-pill"><i class="bi bi-file-earmark-image text-primary me-1"></i> PNG & JPG Images</span>
+          <span class="file-type-pill"><i class="bi bi-cpu text-info me-1"></i> Automated PII Detection</span>
+          <span class="file-type-pill"><i class="bi bi-lightning-charge text-warning me-1"></i> High-Speed OCR</span>
+        </div>
+      </section>
+
+      <!-- Upload Section -->
+      <section class="mb-5" id="upload">
+        <div class="glass-card p-4 p-md-5">
+          <div class="text-center mb-4">
+            <h2 class="h3 font-heading mb-1">Upload Document for Redaction</h2>
+            <p class="text-muted">Drag & drop your file below or click to select from your device</p>
+          </div>
+
+          <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+            
+            <!-- Hidden File Input -->
+            <input type="file" id="fileInput" name="file" accept=".pdf,.png,.jpg,.jpeg,.bmp,.tiff" required hidden>
+
+            <!-- Dropzone Container -->
+            <div class="upload-dropzone" id="uploadDropzone">
+              <div class="upload-icon-wrapper">
+                <i class="bi bi-cloud-arrow-up-fill"></i>
+              </div>
+
+              <h4 class="h5 font-heading mb-2">Drop your file here or browse</h4>
+              <p class="text-muted mb-3 fs-7" style="max-width: 450px; margin: 0 auto;">
+                Supports PDF documents and Image files (PNG, JPG, JPEG, TIFF, BMP). Maximum recommended file size: 25MB.
+              </p>
+
+              <div class="supported-badges">
+                <span class="file-type-pill"><i class="bi bi-file-earmark-pdf"></i> .pdf</span>
+                <span class="file-type-pill"><i class="bi bi-file-earmark-image"></i> .png</span>
+                <span class="file-type-pill"><i class="bi bi-file-earmark-image"></i> .jpg</span>
+                <span class="file-type-pill"><i class="bi bi-file-earmark-image"></i> .jpeg</span>
+              </div>
+            </div>
+
+            <!-- Selected File Card Preview -->
+            <div class="selected-file-card" id="selectedFileCard">
+              <div class="d-flex align-items-center gap-3">
+                <div id="fileIconDisplay"><i class="bi bi-file-earmark-text-fill text-primary fs-3"></i></div>
+                <div>
+                  <h6 class="mb-0 font-heading" id="fileNameDisplay">document.pdf</h6>
+                  <span class="text-muted fs-7" id="fileSizeDisplay">1.2 MB</span>
+                </div>
+              </div>
+
+              <button type="button" class="btn btn-outline-danger btn-sm rounded-circle p-2" id="removeFileBtn" title="Remove selected file">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
+
+            <!-- Action Submit Button -->
+            <div class="text-center mt-4">
+              <button type="submit" class="btn-primary-custom btn-lg w-100 w-sm-auto px-5" id="submitBtn" disabled>
+                <i class="bi bi-shield-lock-fill"></i>
+                <span>Redact Document Now</span>
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </section>
+
+      <!-- Animated Process Stepper -->
+      <section class="progress-stepper-container" id="progressStepper">
+        <div class="text-center mb-4">
+          <h4 class="h5 font-heading text-primary mb-1">Sanitization Pipeline Active</h4>
+          <p class="text-muted fs-7">Processing file through privacy algorithms</p>
+        </div>
+
+        <div class="step-tracker">
+          <div class="step-progress-bar" id="stepProgressBar"></div>
+
+          <div class="step-item" id="step1">
+            <div class="step-node"><i class="bi bi-upload"></i></div>
+            <span class="step-label">Upload</span>
+          </div>
+
+          <div class="step-item" id="step2">
+            <div class="step-node"><i class="bi bi-eye"></i></div>
+            <span class="step-label">OCR Extract</span>
+          </div>
+
+          <div class="step-item" id="step3">
+            <div class="step-node"><i class="bi bi-search"></i></div>
+            <span class="step-label">PII Detect</span>
+          </div>
+
+          <div class="step-item" id="step4">
+            <div class="step-node"><i class="bi bi-eraser-fill"></i></div>
+            <span class="step-label">Redaction</span>
+          </div>
+
+          <div class="step-item" id="step5">
+            <div class="step-node"><i class="bi bi-check-lg"></i></div>
+            <span class="step-label">Completed</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results Dashboard Section -->
+      <section id="resultsContainer" style="display: none;">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <h3 class="h4 font-heading mb-0"><i class="bi bi-speedometer2 text-primary me-2"></i> Redaction Analysis Dashboard</h3>
+          <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">
+            <i class="bi bi-shield-check me-1"></i> Processing Completed
+          </span>
+        </div>
+
+        <div class="dashboard-grid">
+
+          <!-- Card 1: Original Extracted Text -->
+          <div class="dashboard-card col-lg-6-span">
+            <div class="card-header-custom">
+              <div class="card-header-title text-primary">
+                <i class="bi bi-file-text-fill"></i>
+                <span>Original Extracted Text</span>
+              </div>
+
+              <div class="d-flex align-items-center gap-2">
+                <div class="input-group input-group-sm d-none d-sm-flex" style="width: 180px;">
+                  <span class="input-group-text bg-body-tertiary"><i class="bi bi-search"></i></span>
+                  <input type="text" class="form-control" id="textSearchInput" placeholder="Filter text...">
+                </div>
+
+                <button class="btn btn-sm btn-secondary-custom" data-copy-target="originalTextDisplay" title="Copy original text">
+                  <i class="bi bi-clipboard"></i> Copy
+                </button>
+              </div>
+            </div>
+
+            <div class="card-body-custom">
+              <div class="text-viewer-box" id="originalTextDisplay">
+                <!-- Extracted text populated here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Detected PII Entities Badges -->
+          <div class="dashboard-card col-lg-6-span">
+            <div class="card-header-custom">
+              <div class="card-header-title text-warning">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span>Detected PII Entities</span>
+              </div>
+            </div>
+
+            <div class="card-body-custom">
+              <p class="text-muted fs-7 mb-3">Targeted Personally Identifiable Information identified within document:</p>
+              
+              <div class="pii-badge-container" id="piiBadgesContainer">
+                <!-- Color coded PII tags injected here -->
+              </div>
+
+              <!-- Summary Stat Metrics Grid -->
+              <div class="mt-4 pt-3 border-top">
+                <h6 class="font-heading mb-3 text-muted fs-7 text-uppercase" style="letter-spacing: 0.05em;">Entity Count Breakdown</h6>
+                
+                <div class="stat-summary-grid">
+                  <div class="stat-metric-card">
+                    <div class="stat-metric-value" id="metricNames">0</div>
+                    <div class="stat-metric-label">Names</div>
+                  </div>
+
+                  <div class="stat-metric-card">
+                    <div class="stat-metric-value" id="metricEmails">0</div>
+                    <div class="stat-metric-label">Emails</div>
+                  </div>
+
+                  <div class="stat-metric-card">
+                    <div class="stat-metric-value" id="metricPhones">0</div>
+                    <div class="stat-metric-label">Phones</div>
+                  </div>
+
+                  <div class="stat-metric-card">
+                    <div class="stat-metric-value" id="metricAadhaar">0</div>
+                    <div class="stat-metric-label">Aadhaar</div>
+                  </div>
+
+                  <div class="stat-metric-card">
+                    <div class="stat-metric-value" id="metricPan">0</div>
+                    <div class="stat-metric-label">PAN</div>
+                  </div>
+
+                  <div class="stat-metric-card">
+                    <div class="stat-metric-value" id="metricOthers">0</div>
+                    <div class="stat-metric-label">Others</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Card 3: Redacted Text -->
+          <div class="dashboard-card">
+            <div class="card-header-custom">
+              <div class="card-header-title text-danger">
+                <i class="bi bi-shield-shaded"></i>
+                <span>Sanitized Redacted Text</span>
+              </div>
+
+              <button class="btn btn-sm btn-secondary-custom" data-copy-target="redactedTextDisplay" title="Copy redacted text">
+                <i class="bi bi-clipboard"></i> Copy Redacted Text
+              </button>
+            </div>
+
+            <div class="card-body-custom">
+              <div class="text-viewer-box" id="redactedTextDisplay">
+                <!-- Redacted text output populated here -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Download Section -->
+        <div id="downloadArea">
+          <!-- Download Buttons Card injected dynamically -->
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section class="features-grid" id="features">
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <i class="bi bi-eye-fill"></i>
+          </div>
+          <h4 class="h5 font-heading mb-2">High-Accuracy OCR</h4>
+          <p class="text-muted fs-7 mb-0">Processes scanned PDF documents and images to accurately extract text from noisy backgrounds.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <i class="bi bi-cpu-fill"></i>
+          </div>
+          <h4 class="h5 font-heading mb-2">AI-Powered PII Detection</h4>
+          <p class="text-muted fs-7 mb-0">Identifies confidential entities including Names, Emails, Phone Numbers, Aadhaar, and PAN cards.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <i class="bi bi-shield-check-fill"></i>
+          </div>
+          <h4 class="h5 font-heading mb-2">Irreversible Redaction</h4>
+          <p class="text-muted fs-7 mb-0">Ensures redacted regions in PDFs and images are rendered unrecoverable to prevent data leaks.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
+        <div class="brand-logo-icon" style="width: 28px; height: 28px; font-size: 0.9rem;">
+          <i class="bi bi-shield-lock-fill"></i>
+        </div>
+        <span class="font-heading fw-bold fs-5">ShieldRedact</span>
+      </div>
+      <p class="text-muted fs-7 mb-3">Privacy-Aware Document Redaction System. Designed for Enterprise Security & Confidentiality.</p>
+      <div class="text-muted fs-7">&copy; 2026 ShieldRedact. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- App JS -->
+  <script src="/static/script.js"></script>
+
+</body>
+</html>
